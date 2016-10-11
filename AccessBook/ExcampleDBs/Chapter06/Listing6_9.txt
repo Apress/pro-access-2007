@@ -1,0 +1,8 @@
+Create Procedure Inst_Student
+@StudentName varchar(20)
+@StudentRef int
+AS
+INSERT INTO tblStudent
+VALUES
+@StudentName
+@StudentRef

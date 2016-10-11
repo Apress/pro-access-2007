@@ -1,0 +1,12 @@
+Private Sub Form_Open(Cancel As Integer)
+Dim cmd As ADODB.Command
+Dim conn As ADODB.Connection
+Set conn = CurrentProject.Connection
+Set cmd = New ADODB.Command
+Set rststudent = New ADODB.Recordset
+Set cmd.ActiveConnection = conn
+cmd.CommandText = "usp_getStudentData"
+cmd.CommandType = adCmdStoredProc
+rststudent.Open cmd, , adOpenKeyset, adLockOptimistic, adCmdStoredProc
+Call fillform
+End Sub

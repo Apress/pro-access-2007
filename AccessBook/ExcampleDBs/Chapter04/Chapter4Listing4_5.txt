@@ -1,0 +1,47 @@
+Option Compare Database
+
+Option Explicit
+Public Type GUID
+  Data1         As Long
+  Data2         As Integer
+  Data3         As Integer
+  Data4(0 To 7) As Byte
+End Type
+
+Private Declare Function CoCreateGuid Lib "ole32.dll" ( _
+  ByRef pguid As GUID) As Long
+ 
+Private Declare Function StringFromGUID2 Lib "ole32.dll" ( _
+  ByRef rguid As Any, _
+  ByVal lpstrClsId As Long, _
+  ByVal cbMax As Long) As Long
+Public Function GetGUIDString() As String
+
+' Create a GUID and return its string representation.
+'
+' 2002-12-15. Cactus Data ApS, CPH.
+
+  ' Length of GUID string per definition.
+  Const clngGUID    As Long = 38
+  ' Length of buffer with added space for zero terminator.
+  Const clngBuffer  As Long = clngGUID + 1
+ 
+  Dim udtGuid       As GUID
+  Dim strGUID       As String * clngGUID
+  Dim abytGUID()    As Byte
+ 
+  ' Dim byte array.
+  abytGUID() = String(clngBuffer, vbNullChar)
+  ' Create GUID.
+  If CoCreateGuid(udtGuid) = 0 Then
+    ' GUID was successfully created.
+    If StringFromGUID2(udtGuid, VarPtr(abytGUID(0)), clngBuffer) = clngBuffer Then
+      ' GUID was successfully copied into byte array abytGUID in Unicode.
+      ' Convert byte array to Ansi GUID string stripping zero terminator.
+      strGUID = abytGUID
+    End If
+  End If
+ 
+  GetGUIDString = strGUID
+
+End Functi

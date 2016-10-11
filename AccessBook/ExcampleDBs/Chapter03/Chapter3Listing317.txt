@@ -1,0 +1,8 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+<ribbon startFromScratch="false">
+<tabs>
+<tab id="tabProducts" label="Products">
+</tab>
+</tabs>
+</ribbon>
+</customUI>

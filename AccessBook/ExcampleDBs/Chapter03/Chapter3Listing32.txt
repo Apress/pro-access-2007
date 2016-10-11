@@ -1,0 +1,18 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+<ribbon startFromScratch="false">
+<tabs>
+<tab idMso="TabAddIns">
+<group id="EmpGroup" label="Employees">
+<button id="btEmp" imageMso="AddOrRemoveAttendees"å
+size="large" label="Employee Menu" onAction="cmdEmployee"/>
+<button id="frmbt" imageMso="RecordsAddFromOutlook"å
+size="large" label="Employee Form" onAction="OpenEmpfrm"/>
+<button id="frmAddbt" imageMso="MeetingsWorkspace"å
+size="large" label="Add Employee" onAction="AddEmpfrm"/>
+<button id="frmVwbt" imageMso="FileManageMenu"å
+size="large" label="View Employees " onAction="VwEmpfrm"/>
+</group>
+</tab>
+</tabs>
+</ribbon>
+</customUI>

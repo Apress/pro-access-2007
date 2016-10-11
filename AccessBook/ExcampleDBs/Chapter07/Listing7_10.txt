@@ -1,0 +1,17 @@
+CREATE PROCEDURE usp_InsertStudent
+(
+@StudentFName nchar(10),
+@StudentSName nchar(10),
+@StudentAddr1 nchar(10),
+@StudentAddr2 nchar(10),
+@StudentTown nchar(10)
+)
+AS
+INSERT INTO dbo.tblStudent(StudForeName,
+StudSurName, StudAdd1, StudAdd2, StudTown)
+VALUES
+(@StudentFName,
+@StudentSName,
+@StudentAddr1,
+@StudentAddr2,
+@StudentTown)

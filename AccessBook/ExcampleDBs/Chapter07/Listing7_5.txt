@@ -1,0 +1,20 @@
+CREATE Procedure usp_FindStudent
+(@StudentRef int = null)
+AS
+IF @StudentRef is null
+BEGIN
+SELECT * FROM dbo.tblStudent
+END
+Else
+BEGIN
+SELECT
+dbo.tblStudent.StudForeName, dbo.tblStudent.StudSurName,
+dbo.tblStudent.StudAdd1, dbo.tblStudent.StudAdd2,
+dbo.tblStudent.StudTown, dbo.tblModule.ModName
+FROM
+dbo.tblModule INNER JOIN
+dbo.tblStudent ON dbo.tblModule.ModStudent
+= dbo.tblStudent.StudRef
+WHERE
+dbo.tblStudent.StudRef= @StudentRef
+END

@@ -1,0 +1,15 @@
+Public Sub gSetComboBoxValues(argForm As String)
+'****************************
+' Initial Course Combo Source
+'****************************
+gstrcboCourse = "SELECT tblCourse.CourseRef, tblCourse.fldCourseName" 
+& "FROM tblLocalCourse;"
+Forms(argForm)!cboCourse.RowSource = gstrcboCourse
+'*****************************
+' Initial Student Row Source
+'*****************************
+gstrcboStudent = "SELECT tblStudent.StudentRef, tblStudent.fldStudentSurName" 
+& "FROM tblLocalStudent;"
+Forms(argForm)!cboStudent.RowSource = gstrcboStudent
+End Sub
+A public function is created

@@ -1,0 +1,42 @@
+Private Sub cmdSave_Click()
+On Error GoTo Err_cmdSave_Click
+Call valData
+Dim cmd As ADODB.Command
+Dim prmForeName As ADODB.Parameter
+Dim prmSurName As ADODB.Parameter
+Dim prmAddr1 As ADODB.Parameter
+Dim prmAdd2 As ADODB.Parameter
+Dim prmTown As ADODB.Parameter
+Dim rststudent As ADODB.Recordset
+Dim conn As ADODB.Connection
+Set conn = CurrentProject.AccessConnection
+Set cmd = New ADODB.Command
+cmd.ActiveConnection = conn
+cmd.CommandType = adCmdStoredProc
+cmd.CommandText = "usp_InsertStudent"
+Set prmForeName = cmd.CreateParameter("@ForeName", adVarChar, adParamInput, 10)
+Set prmSurName = cmd.CreateParameter("@SurName", adVarChar, adParamInput, 10)
+Set prmAddr1 = cmd.CreateParameter("@StudentAddr1", adVarChar, adParamInput, 10)
+Set prmAdd2 = cmd.CreateParameter("@StudentAddr2", adVarChar, adParamInput, 10)
+Set prmTown = cmd.CreateParameter("@StudentTown", adVarChar, adParamInput, 10)
+cmd.Parameters.Append prmForeName
+prmForeName.Value = Me.StudForeName
+cmd.Parameters.Append prmSurName
+prmSurName.Value = Me.StudSurName
+cmd.Parameters.Append prmAddr1
+prmAddr1.Value = Me.StudAdd1
+cmd.Parameters.Append prmAdd2
+prmAdd2.Value = Me.StudAdd2
+cmd.Parameters.Append prmTown
+prmTown.Value = Me.StudTown
+cmd.Execute
+Exit_cmdSave_Click:
+On Error Resume Next
+If Not (prmTown Is Nothing) Then prmTown.Close: Set prmTown = Nothing
+If Not (prmAdd2 Is Nothing) Then prmAdd2.Close: Set prmAdd2 = Nothing
+If Not (prmAddr1 Is Nothing) Then prmAddr1.Close: Set prmAddr1 = Nothing
+If Not (prmForeName Is Nothing) Then prmForeName.Close: å
+Set prmForeName = Nothing
+If Not (cmd Is Nothing) Then cmd.Close: Set cmd = Nothing
+If Not (conn Is Nothing) Then conn.Close: Set conn = Nothing
+Exit Sub

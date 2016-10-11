@@ -1,0 +1,24 @@
+Sub PassParam()
+Dim conn As ADODB.Connection
+Dim cmd As ADODB.Command
+Dim prm As ADODB.Parameter
+Set conn = New ADODB.Connection
+conn.Open "Provider=sqloledb;" & 
+"Data Source=MARTIN\BARTRACKS;" & 
+"Initial Catalog=LinkedStudent;" & 
+"Integrated Security=SSPI"
+Set cmd = New ADODB.Command
+cmd.ActiveConnection = conn
+cmd.CommandText = "usp_AddStudent"
+cmd.CommandType = adCmdStoredProc
+Set prm = cmd.CreateParameter("StudentForeName", adVarWChar, adParamInput, 25,å
+"William ")
+cmd.Parameters.Append prm
+Set prm = cmd.CreateParameter("StudentSurname", adVarWChar, adParamInput, å
+25, "Reid ")
+cmd.Parameters.Append prm
+cmd.Execute
+Set prm = Nothing
+Set cmd = Nothing
+Set conn = Nothing
+End Sub

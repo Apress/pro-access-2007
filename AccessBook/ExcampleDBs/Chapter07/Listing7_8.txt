@@ -1,0 +1,27 @@
+Private Sub Command5_Click()
+On Error GoTo Err_Command5_Click
+Dim cmd As ADODB.Command
+Dim prmForeName As ADODB.Parameter
+Dim prmSurName As ADODB.Parameter
+Dim rstStudent As ADODB.Recordset
+Dim conn As ADODB.Connection
+Set conn = CurrentProject.AccessConnection
+Set cmd = New ADODB.Command
+cmd.ActiveConnection = conn
+cmd.CommandType = adCmdStoredProc
+cmd.CommandText = "usp_InsertStudent"
+Set prmForeName = cmd.CreateParameter("@ForeName", adVarChar, adParamInput, 10)
+Set prmSurName = cmd.CreateParameter("@SurName", adVarChar, adParamInput, 10)
+cmd.Parameters.Append prmForeName
+prmForeName.Value = Me.txtforename
+cmd.Parameters.Append prmSurName
+prmSurName.Value = Me.txtsurname
+cmd.Execute
+Exit_Command5_Click:
+On Error Resume Next
+Exit Sub
+Err_Command5_Click:
+MsgBox Err.Description, , "Error in Sub Form_Form1.Command5_Click"
+Resume Exit_Command5_Click
+Resume 0 '.FOR TROUBLESHOOTING
+End Sub

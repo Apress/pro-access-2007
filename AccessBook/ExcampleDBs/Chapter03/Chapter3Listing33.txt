@@ -1,0 +1,10 @@
+Public Function AddEmpfrm()
+On Error GoTo Err_AddEmpfrm
+DoCmd.OpenForm "frmEmployees", acNormal, , acFormAdd
+Exit_AddEmpfrm:
+Exit Function
+Err_AddEmpfrm:
+MsgBox Err.Description, , "Error in Function basribbons.AddEmpfrm"
+Resume Exit_AddEmpfrm
+Resume 0 '.FOR TROUBLESHOOTING
+End Function

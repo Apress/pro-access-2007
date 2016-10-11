@@ -1,0 +1,16 @@
+Private Sub cmdPrevious_Click()
+On Error GoTo Err_cmdPrevious_Click
+rststudent.MovePrevious
+If Not rststudent.EOF Then
+For Each fld In rststudent.Fields
+Me(fld.Name).Value = fld.Value
+Next
+End If
+Exit_cmdPrevious_Click:
+Exit Sub
+Err_cmdPrevious_Click:
+MsgBox Err.Description, , "Error in Sub å
+Form_frmChapter7SPExample.cmdPrevious_Click"
+Resume Exit_cmdPrevious_Click
+Resume 0 '.FOR TROUBLESHOOTING
+End Sub

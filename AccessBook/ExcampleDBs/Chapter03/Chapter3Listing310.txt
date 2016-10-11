@@ -1,0 +1,10 @@
+Function GetImage(control As IRibbonControl, ByRef image)
+Dim controlName As String
+controlName = control.ID
+Select Case controlName
+Case "Products":
+Set image = LoadPicture("c:\images\Product.bmp")
+Case "Customers"
+Set image = LoadPicture("c:\images\Customers.bmp")
+End Select
+End Function

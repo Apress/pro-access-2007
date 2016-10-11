@@ -1,0 +1,28 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+<ribbon startFromScratch="false">
+<tabs>
+<tab idMso="TabCreate" visible="true">
+<group idMso="GroupCreateTable" visible="false" />
+<group idMso="GroupCreateForm" visible="false" />
+<group idMso="GroupCreateReport" visible="false" />
+<group idMso="GroupCreateAdvanced" visible="false" />
+</tab>
+<tab id="tabProducts" label="Products">
+<group id = "ProdMain" label ="Product Menu">
+<button id="ProdList" label="Product Listing" size="large" 
+onAction="OpenProdList" getImage="GetImage"/>
+<button id ="ProdForms" label="Product Forms" size="large" 
+onAction="OpenProdForm" getImage="GetImage"/>
+</group>
+<group id="frmdrop" label ="Object Drop Downs">
+<dropDown id="cboForms" label="Show Forms" onAction="OpenForm" 
+getItemCount="GetFormCount" getItemLabel="GetFormLabel"/>
+<dropDown id="cboReports" onAction="OpenReport" 
+getItemCount="GetReportCount" getItemID="GetReportName" 
+getItemLabel="GetReportCaption"/>
+
+</group>
+</tab>
+</tabs>
+</ribbon>
+</customUI>

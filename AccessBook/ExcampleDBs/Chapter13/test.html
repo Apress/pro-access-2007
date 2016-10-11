@@ -1,0 +1,21 @@
+<html><head><title>Virtual Earth Map</title></head><meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src='http://dev.virtualearth.net/mapcontrol/v3/mapcontrol.js'></script> 
+<script language="javascript" type="text/javascript">
+     var map=null;
+ function ShowLatLon(e)
+        {
+alert('Latitude = ' + e.view.LatLong.Latitude + ' Longitude = ' + e.view.LatLong.Longitude);
+       }
+  function GetMap()
+ { 
+         map = new VEMap("myMap");
+map.onLoadMap = function(){ alert('The map has loaded.') };
+         map.LoadMap(new VELatLong(48.51, -123.36), 10 ,"h" ,false);
+    map.AttachEvent("onclick", ShowLatLon);
+ }
+</script>
+<body onload='GetMap();'>
+<div id='myMap' style='position:relative; width:600px; height:600px;'></div>
+<td> right or left click map for latitude longitude position </td>
+</body>
+</html>

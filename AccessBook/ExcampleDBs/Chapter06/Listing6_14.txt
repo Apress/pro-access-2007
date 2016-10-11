@@ -1,0 +1,8 @@
+Private Sub getStudent()
+With rstStudent
+txtStudentForeName = !fldStudentForeName
+txtStudentSurName = !fldStudentSurName
+txtStudentEmail = !fldStudentEmail
+txtStudentAddr2 = !fldStudentAddr2
+End With
+End Sub

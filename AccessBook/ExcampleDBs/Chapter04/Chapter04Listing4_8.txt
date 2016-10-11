@@ -1,0 +1,21 @@
+Public Sub GetCom()
+On Error GoTo Err_GetCom
+Dim OutObj As Object
+Dim myAddIn As Office.COMAddIn
+Set OutObj = CreateObject("Outlook.Application")
+For Each myAddIn In OutObj.Application.COMAddIns
+With myAddIn
+Debug.Print "Connected = " & .Connect;
+Debug.Print " , ProgId = " & .ProgId & " - ";
+Debug.Print .Description
+End With
+Next myAddIn
+Exit_GetCom:
+On Error Resume Next
+If Not (OutObj Is Nothing) Then OutObj.Close: Set OutObj = Nothing
+Exit Sub
+Err_GetCom:
+MsgBox Err.Description, , "Error in Sub basEmailDC.GetCom"
+Resume Exit_GetCom
+Resume 0 '.FOR TROUBLESHOOTING
+End Sub

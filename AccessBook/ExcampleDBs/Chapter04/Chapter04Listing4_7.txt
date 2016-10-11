@@ -1,0 +1,34 @@
+Public Sub addEmail()
+On Error GoTo Err_addEmail
+'Manually add a record to MSysDataCollection
+
+Dim rstsysObj As DAO.Recordset
+Dim strsql As String
+Dim db As Database
+Set db = CurrentDb
+
+Set rstsysObj = db.OpenRecordset("MSysDataCollection")
+
+With rstsysObj
+.AddNew
+!Active = "-1"
+!BasedOnType = 1
+!CreatedDate = Now()
+!ExternalID = GetGUIDString()
+!FormName = "My Data Colelction Form"
+InfoPathForm = "0"
+
+.Update
+
+End With
+    
+Exit_addEmail:
+On Error Resume Next
+    If Not (rstsysObj Is Nothing) Then rstsysObj.Close: Set rstsysObj = Nothing
+    If Not (db Is Nothing) Then db.Close: Set db = Nothing
+Exit Sub
+Err_addEmail:
+        MsgBox Err.Description, , "Error in Sub basEmailDC.addEmail"
+        Resume Exit_addEmail
+    Resume 0    '.FOR TROUBLESHOOTING
+End Sub

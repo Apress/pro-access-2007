@@ -1,0 +1,54 @@
+Option Compare Database
+Dim rstforms As DAO.Recordset
+Dim rsReports As DAO.Recordset
+
+Function GetFormCount(control As IRibbonControl, ByRef count)
+    Dim FormNames As String
+    FormNames = "SELECT Name FROM MSysObjects WHERE  (((MSysObjects.Type)=-32768)) ORDER BY Name;"
+    Set rstforms = CurrentDb.OpenRecordset(FormNames)
+    count = rstforms.RecordCount
+   Debug.Print count
+End Function
+
+Function GetFormNames(control As IRibbonControl, index As Integer, ByRef ID)
+    rstforms.MoveFirst
+    rstforms.Move index
+    ID = rstforms("Name").Value
+End Function
+
+Function GetFormLabel(control As IRibbonControl, index As Integer, ByRef label)
+rstforms.MoveFirst
+rstforms.Move index
+label = rstforms("Name").Value
+End Function
+
+
+Public Sub test()
+Dim FormNames As String
+    FormNames = "SELECT Name FROM MSysObjects WHERE  (((MSysObjects.Type)=-32768)) ORDER BY Name;"
+    Set rstforms = CurrentDb.OpenRecordset(FormNames)
+    count = rstforms.RecordCount
+    Debug.Print count
+End Sub
+
+Function GetReportCount(control As IRibbonControl, ByRef count)
+    Dim reportNames As String
+    reportNames = "SELECT Name FROM MSysObjects WHERE (((MSysObjects.Type)=-32764)) ORDER BY Name;"
+    Set rsReports = CurrentDb.OpenRecordset(reportNames)
+    count = rsReports.RecordCount
+End Function
+
+Function GetReportName(control As IRibbonControl, index As Integer, ByRef ID)
+    rsReports.MoveFirst
+    rsReports.Move index
+    ID = rsReports("Name").Value
+End Function
+Function GetReportCaption(control As IRibbonControl, index As Integer, ByRef label)
+    rsReports.MoveFirst
+    rsReports.Move index
+    label = rsReports("Name").Value
+End Function
+
+Function OpenReport(control As IRibbonControl, selectedId As String, selectedIndex As Integer)
+    DoCmd.OpenReport selectedId, acViewReport
+End Function

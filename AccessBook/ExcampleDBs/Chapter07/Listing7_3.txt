@@ -1,0 +1,7 @@
+CREATE TRIGGER tr_addLog ON dbo.tblLogg
+FOR INSERT
+AS
+INSERT INTO tblLogg
+(LogTable,LogDate,logUser)
+VALUES
+('tblStudent',getdate(),user_name())

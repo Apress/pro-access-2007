@@ -1,0 +1,14 @@
+CREATE PROCEDURE usp_Course
+(@courseref int)
+AS SELECT tblStudent.fldStudentForeName,å
+.tblStudent.fldStudentSurName, tblCourse.fldCourseName,
+ tblCourse.CourseRef
+FROM tblStudent
+INNER JOIN
+tblStudentCourse ON
+tblStudent.StudentRef =
+tblStudentCourse.fldStudRef INNER JOIN
+tblCourse ON tblStudentCourse.fldCourseRef
+= tblCourse.CourseRef
+WHERE ( .tblCourse.CourseRef = @courseref)
+ORDER BY .tblStudent.fldStudentSurName

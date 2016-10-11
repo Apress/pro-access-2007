@@ -1,0 +1,219 @@
+Option Compare Database
+Dim PeopleByFirst As Collection
+Dim PeopleByLast As Collection
+Property Get PersonByID(intID As Long) As Person
+Set PersonByID = PeopleByFirst("ID:" & intID)
+End Property
+Property Get PeopleCount() As Long
+PeopleCount = PeopleByFirst.Count
+End Property
+
+Property Get PersonByFirstName(intOrder As Long) As Person
+Set PersonByFirstName = PeopleByFirst(intOrder)
+End Property
+
+Property Get PersonByLastName(intOrder As Long) As Person
+Set PersonByLastName = PeopleByLast(intOrder)
+End Property
+
+Private Sub GetPeople()
+Dim rs As ADODB.Recordset
+Dim strSQL As String
+Dim ps As Person
+Dim i As Long
+Set PeopleByFirst = New Collection
+Set PeopleByLast = New Collection
+Set rs = New ADODB.Recordset
+strSQL = "SELECT PersonID, FirstName, LastName FROM tblPeople ORDER BY FirstName"
+rs.Open strSQL, CurrentProject.Connection, adOpenKeyset, adLockReadOnly
+If rs.EOF = False Then rs.MoveFirst
+i = 1
+Do Until rs.EOF = True
+Set ps = New Person
+ps.StorageOnly = True
+ps.ID = rs.Fields(0).Value
+ps.FirstName = rs.Fields(1).Value
+ps.LastName = rs.Fields(2).Value
+ps.FirstSortOrder = i
+PeopleByFirst.Add ps, "ID:" & ps.ID
+Set ps = Nothing
+rs.MoveNext
+i = i + 1
+Loop
+rs.Close
+Set rs = Nothing
+Set rs = New ADODB.Recordset
+strSQL = "SELECT PersonID, LastName FROM tblPeople ORDER BY LastName"
+rs.Open strSQL, CurrentProject.Connection, adOpenKeyset, adLockReadOnly
+If rs.EOF = False Then rs.MoveFirst
+i = 1
+Do Until rs.EOF = True
+Set ps = PeopleByFirst("ID:" & rs.Fields(0).Value)
+ps.LastSortOrder = i
+PeopleByLast.Add ps, "ID:" & ps.ID
+Set ps = Nothing
+rs.MoveNext
+i = i + 1
+Loop
+rs.Close
+Set rs = Nothing
+End Sub
+Private Sub Class_Initialize()
+GetPeople
+End Sub
+
+Listing 5-33. Person Class
+
+Option Compare Database
+Public FirstName As String
+Public LastName As String
+Public FirstSortOrder As Long
+Public LastSortOrder As Long
+Public StorageOnly As Boolean
+Dim intID As Long
+Dim blNew As Boolean
+Property Get FullName() As String
+FullName = FirstName & " " & LastName
+End Property
+
+Property Let FullName(strEnter As String)
+Dim strArray() As String
+strArray = Split(strEnter, " ")
+FirstName = strArray(0)
+LastName = strArray(1)
+End Property
+
+Property Get ID() As Long
+ID = intID
+End Property
+
+Property Let ID(intEnter As Long)
+intID = intEnter
+blNew = False
+If Not StorageOnly Then
+Dim rs As ADODB.Recordset
+Dim strSQL As String
+strSQL = "SELECT FirstName, LastName FROM tblPeople WHERE PersonID=" & ID
+Set rs = New ADODB.Recordset
+rs.Open strSQL, CurrentProject.Connection, adOpenKeyset, adLockReadOnly
+If rs.EOF = False Then
+rs.MoveFirst
+FirstName = rs.Fields(0).Value
+LastName = rs.Fields(1).Value
+End If
+rs.Close
+Set rs = Nothing
+End If
+End Property
+
+Private Sub Class_Initialize()
+StorageOnly = False
+blNew = True
+End Sub
+
+Friend Function Delete()
+Dim strSQL As String
+strSQL = "DELETE * FROM tblPeople WHERE PersonID=" & ID
+If blNew = False Then CurrentProject.Connection.Execute strSQL
+End Function
+
+Friend Function Save()
+Dim rs As ADODB.Recordset
+Dim strSQL As String
+Set rs = New ADODB.Recordset
+If blNew Then
+rs.Open "tblPeople", CurrentProject.Connection, adOpenKeyset, å
+adLockOptimistic, adCmdTableDirect
+rs.AddNew
+Else
+strSQL = "SELECT PersonID, FirstName, LastName FROM tblPeople WHERE å
+PersonID=" & ID
+rs.Open strSQL, CurrentProject.Connection, adOpenKeyset, adLockOptimistic
+If rs.EOF = False Then rs.MoveFirst
+End If
+rs.Fields("FirstName").Value = FirstName
+rs.Fields("LastName").Value = LastName
+rs.Update
+If blNew Then
+intID = rs.Fields("PersonID").Value
+blNew = False
+End If
+rs.Close
+Set rs = Nothing
+End Function
+
+Listing 5-34. frmPeople VBA Module
+
+Private Sub cmdSave_Click()
+Dim intID As Long
+CurrentPerson.Save
+intID = CurrentPerson.ID
+Me.cmdNew.Enabled = True
+Set PeopleClass = Nothing
+Set PeopleClass = New People
+Set CurrentPerson = PeopleClass.PersonByID(intID)
+DisplayPerson
+End Sub
+
+Private Sub Form_Load()
+Set PeopleClass = New People
+Set CurrentPerson = PeopleClass.PersonByFirstName(1)
+DisplayPerson
+End Sub
+
+Private Sub DisplayPerson()
+Me.txtFirstName = CurrentPerson.FirstName
+Me.txtLastName = CurrentPerson.LastName
+Me.txtFullName = CurrentPerson.FullName
+Select Case Me.SortOrder.Value
+Case 1 ' Sorted by first name
+Me.lblRecordDisplayed.Caption = "Record " & å
+CurrentPerson.FirstSortOrder & " of " & PeopleClass.PeopleCount
+If CurrentPerson.FirstSortOrder = 1 Then
+Me.cmdNextRecord.SetFocus
+Me.cmdPreviousRecord.Enabled = False
+Else
+Me.cmdPreviousRecord.Enabled = True
+End If
+If CurrentPerson.FirstSortOrder = PeopleClass.PeopleCount Then
+Me.cmdPreviousRecord.SetFocus
+Me.cmdNextRecord.Enabled = False
+Else
+Me.cmdNextRecord.Enabled = True
+End If
+Case 2 ' Sorted by last name
+Me.lblRecordDisplayed.Caption = "Record " & 
+CurrentPerson.LastSortOrder & " of " & PeopleClass.PeopleCount
+If CurrentPerson.LastSortOrder = 1 Then
+Me.cmdNextRecord.SetFocus
+Me.cmdPreviousRecord.Enabled = False
+Else
+Me.cmdPreviousRecord.Enabled = True
+End If
+If CurrentPerson.LastSortOrder = PeopleClass.PeopleCount Then
+Me.cmdPreviousRecord.SetFocus
+Me.cmdNextRecord.Enabled = False
+Else
+Me.cmdNextRecord.Enabled = True
+End If
+End Select
+End Sub
+
+Private Sub SortOrder_Click()
+DisplayPerson
+End Sub
+
+Private Sub txtFirstName_AfterUpdate()
+CurrentPerson.FirstName = Me.txtFirstName
+DisplayPerson
+End Sub
+
+Private Sub txtFullName_AfterUpdate()
+CurrentPerson.FullName = Me.txtFullName
+DisplayPerson
+End Sub
+
+Private Sub txtLastName_AfterUpdate()
+CurrentPerson.LastName = Me.txtLastName
+DisplayPerson
+End Sub

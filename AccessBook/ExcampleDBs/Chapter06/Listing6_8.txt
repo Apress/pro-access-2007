@@ -1,0 +1,17 @@
+Private Sub Form_Open(Cancel As Integer)
+Dim rstStudent As ADODB.Recordset
+Dim cmd As ADODB.Command
+Dim conn As ADODB.Connection
+Set conn = New ADODB.Connection
+Set rstStudent = New ADODB.Recordset
+Set cmd = New ADODB.Command
+conn.ConnectionString = 
+"Provider = SQLOLEDB.1;" & 
+"Data Source =MARTIN\BARTRACKS;Initial Catalog=LinkedStudent;" & 
+"User ID=martinreid;Password=martinreid"
+conn.Open
+cmd.ActiveConnection = conn
+cmd.CommandText = "uspGetStudents"
+Set rstStudent = cmd.Execute
+Me.txtforename = rstStudent!fldStudentForeName
+End Sub

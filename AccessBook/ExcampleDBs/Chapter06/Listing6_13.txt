@@ -1,0 +1,11 @@
+Set db = CurrentDb
+Set rstStudent = db.OpenRecordset("Select * FROM tblStudent",
+dbOpenDynaset, dbSeeChanges)
+' Assign the recordset fields to the form text boxes.
+With rstStudent
+txtStudentForeName = !fldStudentForeName
+txtStudentSurName = !fldStudentSurName
+txtStudentEmail = !fldStudentEmail
+txtStudentAddr2 = !fldStudentAddr2
+End With
+End Sub

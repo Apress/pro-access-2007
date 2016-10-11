@@ -1,0 +1,14 @@
+Public Sub fillform()
+On Error GoTo Err_fillform
+Me.StudForeName = rststudent!StudForeName
+Me.StudSurName = rststudent!StudSurName
+Me.StudAdd1 = rststudent!StudAdd1
+Me.StudAdd2 = rststudent!StudAdd2
+Me.StudTown = rststudetn!StudTown
+Exit_fillform:
+Exit Sub
+Err_fillform:
+MsgBox Err.Description, , "Error in Sub Form_frmClearListbox.fillform"
+Resume Exit_fillform
+Resume 0 '.FOR TROUBLESHOOTING
+End Sub

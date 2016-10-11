@@ -1,0 +1,30 @@
+<customUI xmlns="http://schemas.microsoft.com/office/2006/01/customui">
+<ribbon startFromScratch="false">
+<tabs>
+<tab idMso="TabAddIns">
+<group id="EmpGroup" label="Employees">
+<button id="btEmp" imageMso="AddOrRemoveAttendees"
+size="large" label="Employee Menu" onAction="cmdEmployee"/>
+<button id="frmbt" imageMso="RecordsAddFromOutlook"
+size="large" label="Employee Form" supertip ="Open the Employees form to 
+add, edit and review records"
+onAction="OpenEmpfrm"/><button id="frmAddbt" imageMso="MeetingsWorkspace"
+size="large" label=" Add Employee" onAction="AddEmpfrm"/>
+<dropDown id="empDropdown" label="Emp List" supertip="See list of employees"
+getItemCount="CountEmp" getItemLabel="LogLabel" imageMso="HappyFace"
+onAction="text"></dropDown>
+<splitButton id = "mysplitbutton" size ="large">
+<menu id ="Reports" imageMso="PasteDuplicate" >
+<button id = "button1" label="Report 1" imageMso ="CreateReport"
+onAction="vba or macro to execute" />
+<button id = "button2" label="Report 2" imageMso ="CreateReport"
+onAction="vba or macro to execute" />
+<button id = "button3" label="Report 3" imageMso ="CreateReport"
+onAction="vba or macro to execute" />
+</menu>
+</splitButton>
+</group>
+</tab>
+</tabs>
+</ribbon>
+</customUI>

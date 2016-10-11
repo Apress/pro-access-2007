@@ -1,0 +1,23 @@
+Public Sub PtSPs()
+On Error GoTo Err_PtSPs
+Dim db As DAO.Database
+Dim qdf As QueryDef
+Dim rstlog As DAO.Recordset
+Set db = CurrentDb
+Set qdf = db.QueryDefs("pt_GetDbRoles")
+Set rstlog = qdf.OpenRecordset()
+Do While Not rstlog.EOF
+Debug.Print rstlog!DbFixedRole
+rstlog.MoveNext
+Loop
+Exit_PtSPs:
+On Error Resume Next
+If Not (rstlog Is Nothing) Then rstlog.Close: Set rstlog = Nothing
+If Not (qdf Is Nothing) Then qdf.Close: Set qdf = Nothing
+If Not (db Is Nothing) Then db.Close: Set db = Nothing
+Exit Sub
+Err_PtSPs:
+MsgBox Err.Description, , "Error in Sub Module2.PtSPs"
+Resume Exit_PtSPs
+Resume 0 '.FOR TROUBLESHOOTING
+End Sub

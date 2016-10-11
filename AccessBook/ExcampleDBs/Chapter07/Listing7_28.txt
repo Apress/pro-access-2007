@@ -1,0 +1,108 @@
+IF EXISTS (SELECT * FROM sys.objects WHERE object_id = å
+OBJECT_ID(N'[dbo].[Orders]') AND type in (N'U'))
+BEGIN
+DECLARE @drop_statement varchar(500)
+DECLARE drop_cursor CURSOR FOR
+SELECT 'alter table '+quotename(schema_name(ob.schema_id))+
+'.'+quotename(object_name(ob.object_id))+ ' drop constraint 'å
++ quotename(fk.name)
+FROM sys.objects ob INNER JOIN sys.foreign_keys fk ON å
+fk.parent_object_id = ob.object_id
+WHERE fk.referenced_object_id = OBJECT_ID(N'[dbo].[Orders]')
+OPEN drop_cursor
+FETCH NEXT FROM drop_cursor
+INTO @drop_statement
+WHILE @@FETCH_STATUS = 0
+BEGIN
+EXEC (@drop_statement)
+FETCH NEXT FROM drop_cursor
+INTO @drop_statement
+END
+CLOSE drop_cursor
+DEALLOCATE drop_cursor
+DROP TABLE [dbo].[Orders]
+END
+GO
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE
+[dbo].[Orders]
+(
+[OrderID] int IDENTITY(1, 1) NOT NULL,
+[CustomerID] varchar(5) NULL,
+[EmployeeID] int NULL,
+[OrderDate] datetime NULL,
+[RequiredDate] datetime NULL,
+[ShippedDate] datetime NULL,
+[ShipVia] int NULL,
+[Freight] money DEFAULT 0 NULL,
+[ShipName] varchar(40) NULL,
+[ShipAddress] varchar(60) NULL,
+[ShipCity] varchar(15) NULL,
+[ShipRegion] varchar(15) NULL,
+[ShipPostalCode] varchar(10) NULL,
+[ShipCountry] varchar(15) NULL
+)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [Orders$PrimaryKey]
+PRIMARY KEY
+NONCLUSTERED ([OrderID] ASC)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$CustomerID$disallow_zero_length]
+CHECK (len([CustomerID]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$ShipName$disallow_zero_length]
+CHECK (len([ShipName]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$ShipAddress$disallow_zero_length]
+CHECK (len([ShipAddress]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$ShipCity$disallow_zero_length]
+CHECK (len([ShipCity]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$ShipRegion$disallow_zero_length]
+CHECK (len([ShipRegion]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$ShipPostalCode$disallow_zero_length]
+CHECK (len([ShipPostalCode]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [SSMA_CC$Orders$ShipCountry$disallow_zero_length]
+CHECK (len([ShipCountry]) > 0)
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [Orders$CustomersOrders]
+FOREIGN KEY
+([CustomerID])
+REFERENCES
+[master].[dbo].[Customers] ([CustomerID])
+ON DELETE NO ACTION
+ON UPDATE CASCADE
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [Orders$EmployeesOrders]
+FOREIGN KEY
+([EmployeeID])
+REFERENCES
+[master].[dbo].[Employees] ([EmployeeID])
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+GO
+ALTER TABLE [dbo].[Orders]
+ADD CONSTRAINT [Orders$ShippersOrders]
+FOREIGN KEY
+([ShipVia])
+REFERENCES
+[master].[dbo].[Shippers] ([ShipperID])
+ON DELETE NO ACTION
+ON UPDATE NO ACTION
+GO

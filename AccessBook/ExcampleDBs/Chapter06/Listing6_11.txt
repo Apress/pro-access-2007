@@ -1,0 +1,13 @@
+CREATE Procedure usp_Orders
+AS
+SELECT Customers.CustomerID,
+Customers.CompanyName,
+Sum(CASE When Orders,OrderDate Between 101-Jan-2000'
+And '31-12-2001' THEN UnitPrice ELSE 0 END)
+AS [2001],
+Sum(CASE When Orders,OrderDate Between '01-Jan-2001'
+And '31-12-2002' THEN UnitProce ELSE 0 END)
+AS [2002]
+GROUP BY Customers.CustomerID,
+Customers.CompanyName
+ORDERBY Customers.CustomerID

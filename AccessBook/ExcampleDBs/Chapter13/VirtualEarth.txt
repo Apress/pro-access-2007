@@ -1,0 +1,261 @@
+'MashUp Using Virtual Earth
+
+Function testVirtualEarthMap()
+'------------------
+'display Virtual Earth at a fixed Latitutude and Longitude
+' then  click on map to display Lat/Long position of cursor
+' for info see:
+'http://dev.live.com/virtualearth/sdk/
+'http://www.ftponline.com/special/web20/pvarholasp/default.aspx
+
+Dim objExplorer As Object
+Dim objDocument As Object
+Dim strHTML As String
+
+Set objExplorer = CreateObject("InternetExplorer.Application")
+
+objExplorer.Navigate "about:blank"
+objExplorer.Toolbar = 1 ' 0= off
+objExplorer.StatusBar = 1 '0 =off
+objExplorer.Width = 800
+objExplorer.Height = 870
+objExplorer.Left = 0
+objExplorer.Top = 0
+objExplorer.Visible = 1
+
+Do While (objExplorer.Busy)
+Loop
+
+
+Set objDocument = objExplorer.Document
+objDocument.Open
+'create html string and dump to a test file
+ strHTML = ""
+ strHTML = strHTML & createhtml
+' Output html file to same directory as mdb
+' use html for debugging or later viewing in IE
+
+WriteFile CurrentDBDir & "test.html", strHTML
+
+objDocument.Write strHTML
+objExplorer.Refresh ' ??This has to be done because of http://local.live.com/veapi.ashx
+'objDocument.Close 'stall here
+Do While (objExplorer.Busy)
+Loop
+'MsgBox "finished"
+'Set objExplorer = Nothing
+'Set objDocument = Nothing
+
+End Function
+Function testVirtualEarthMapRoute()
+'------------------
+'display Virtual Earth at a fixed LatLong
+' then  click on map to display Lat/Long position of cursor
+'see:
+' this then displays a route map from Microsoft
+' there will be a 5-10 second pause while route map comes up
+' for info see:
+'http://dev.live.com/virtualearth/sdk/
+'http://www.ftponline.com/special/web20/pvarholasp/default.aspx
+
+Dim objExplorer As Object
+Dim objDocument As Object
+Dim strHTML As String
+Dim strFileHTML As String
+Set objExplorer = CreateObject("InternetExplorer.Application")
+
+objExplorer.Navigate "about:blank"
+objExplorer.Toolbar = 1 ' 0= off
+objExplorer.StatusBar = 1 '0 =off
+objExplorer.Width = 800
+objExplorer.Height = 870
+objExplorer.Left = 0
+objExplorer.Top = 0
+objExplorer.Visible = 1
+
+Do While (objExplorer.Busy)
+Loop
+
+
+Set objDocument = objExplorer.Document
+objDocument.Open
+'create html string and dump to a test file
+' strHTML = ""
+' strHTML = strHTML & createhtml
+
+'WriteFile "c:\gis\test.html", strHTML
+strFileHTML = CurrentDBDir
+
+strHTML = createhtmlroute
+
+' Output html file to same directory as mdb
+' use html for debugging or later viewing in IE
+
+WriteFile CurrentDBDir & "route.html", strHTML
+
+objDocument.Write strHTML
+objExplorer.Refresh ' ??This has to be done because of http://local.live.com/veapi.ashx
+'objDocument.Close 'stall here
+Do While (objExplorer.Busy)
+Loop
+objExplorer.Refresh
+'might be able to retrieve text route directions
+' via this method
+'Dim strHTMLout As String
+'strHTMLout = objExplorer.Document.BODY.parentElement.outerHTML
+ Debug.Print strHTML
+'Set objExplorer = Nothing
+'Set objDocument = Nothing
+End Function
+
+Private Sub WriteFile(ByVal sFileName As String, ByVal sContents As String)
+' Dump XML or html String to File for debugging
+    Dim fhFile As Integer
+    fhFile = FreeFile
+   ' Debug.Print "Length of string=" & Len(sContents)
+    Open sFileName For Output As #fhFile
+    Print #fhFile, sContents;
+    Close #fhFile
+    Debug.Print "Out File" & sFileName
+End Sub
+Public Sub ReadFile(ByVal sFileName As String, ByRef sContents As String)
+' Dump XML  String to File for debugging
+Dim strLine As String
+Dim intLine As Long
+Dim fhFile As Integer
+    intLine = 0
+    sContents = ""
+    fhFile = FreeFile
+   ' Debug.Print "Length of string=" & Len(sContents)
+    Open sFileName For Input As #fhFile
+Do While Not EOF(1) ' Loop until end of file.
+    Input #1, strLine    ' Read data
+    intLine = intLine + 1
+    sContents = sContents & strLine
+    'Debug.Print sContents  ' Print data to Debug window.
+Loop
+Close #fhFile    ' Close file.
+    Debug.Print "Input File" & sFileName & " lines=" & intLine
+End Sub
+Function createhtml() As String
+
+Dim strHTML As String
+ strHTML = ""
+ strHTML = strHTML & "<html><head><title>Virtual Earth Map</title></head>"
+  strHTML = strHTML & "<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">"
+'When your page has referenced the map control, set up the call to display a default map by completing a LoadMap ( ) method call:
+ strHTML = strHTML & vbCrLf & "<script src='http://dev.virtualearth.net/mapcontrol/v3/mapcontrol.js'></script> "
+'  strHTML = strHTML & vbCrLf & "<script type='text/javascript' src='http://local.live.com/veapi.ashx'></script>"
+ strHTML = strHTML & vbCrLf & "<script language=""javascript"" type=""text/javascript"">"
+   
+
+'  strhtml = strhtml & vbCrLf & "<!-- "
+ strHTML = strHTML & vbCrLf & "     var map=null;"
+ 
+ strHTML = strHTML & vbCrLf & " function ShowLatLon(e)"
+ strHTML = strHTML & vbCrLf & "        {"
+ strHTML = strHTML & vbCrLf & "alert('Latitude = ' + e.view.LatLong.Latitude + ' Longitude = ' + e.view.LatLong.Longitude);"
+ strHTML = strHTML & vbCrLf & "       }"
+ strHTML = strHTML & vbCrLf & "  function GetMap()"
+ strHTML = strHTML & vbCrLf & " { "
+ strHTML = strHTML & vbCrLf & "         map = new VEMap(""myMap"");"
+ strHTML = strHTML & vbCrLf & "map.onLoadMap = function(){ alert('The map has loaded.') };"
+
+ strHTML = strHTML & vbCrLf & "         map.LoadMap(new VELatLong(48.51, -123.36), 10 ,""h"" ,false);"
+ strHTML = strHTML & vbCrLf & "    map.AttachEvent(""onclick"", ShowLatLon);"
+ strHTML = strHTML & vbCrLf & " }"
+ strHTML = strHTML & vbCrLf & "</script>"
+' strhtml = strhtml & vbCrLf & "// -->"
+'Last, you display the map:
+
+ strHTML = strHTML & vbCrLf & "<body onload='GetMap();'>"
+ strHTML = strHTML & vbCrLf & "<div id='myMap' style='position:relative; width:600px; height:600px;'></div>"
+ strHTML = strHTML & vbCrLf & "<td> right or left click map for latitude longitude position </td>"
+ strHTML = strHTML & vbCrLf & "</body>"
+ strHTML = strHTML & vbCrLf & "</html>"
+'WriteFile CurrentDBDir & "test.html", strHTML
+createhtml = strHTML
+End Function
+Function CurrentDBDir() As String
+Dim strDBPath As String
+Dim strDBFile As String
+    strDBPath = CurrentDb.Name
+    'may need to call Win API apiFindFirstFile
+    'to get true name otherwise DOS contracted form
+    strDBFile = Dir(strDBPath)
+    CurrentDBDir = Left$(strDBPath, Len(strDBPath) - Len(strDBFile))
+End Function
+
+Function GetDirPath() As String
+Dim db As Database
+Set db = CurrentDb
+GetDirPath = db.Name
+GetDirPath = fGetLongName(GetDirPath)
+End Function
+Function CurrentDBDirLong() As String
+Dim strDBPath As String
+Dim strDBFile As String
+    strDBPath = CurrentDb.Name
+   ' strDBPath = fGetLongName(strDBPath) 'removes "~" in path
+    strDBFile = Dir(strDBPath)
+    CurrentDBDirLong = Left$(strDBPath, Len(strDBPath) - Len(strDBFile))
+End Function
+Function createhtmlroute() As String
+
+Dim strHTML As String
+ strHTML = ""
+ strHTML = strHTML & "<html><head><title>Route Microsoft  To Area 51 Virtual Earth Map</title></head>"
+'  strHTML = strHTML & "<meta http-equiv=""Content-Type"" content=""text/html; charset=utf-8"">"
+'When your page has referenced the map control, set up the call to display a default map by completing a LoadMap ( ) method call:
+ strHTML = strHTML & vbCrLf & "<script src='http://dev.virtualearth.net/mapcontrol/v3/mapcontrol.js'></script> "
+'  strHTML = strHTML & vbCrLf & "<script type='text/javascript' src='http://local.live.com/veapi.ashx'></script>"
+ strHTML = strHTML & vbCrLf & "<script language=""javascript"" type=""text/javascript"">"
+   
+
+'  strhtml = strhtml & vbCrLf & "<!-- "
+ strHTML = strHTML & vbCrLf & "     var map;"
+ 
+ 
+   strHTML = strHTML & vbCrLf & "   function GetMap ()"
+ strHTML = strHTML & vbCrLf & " {"
+  strHTML = strHTML & vbCrLf & "         map = new VEMap (""myMap"")"
+  ' strHTML = strHTML & vbCrLf & "  alert (""1"");"
+  strHTML = strHTML & vbCrLf & "         map.LoadMap(new VELatLong(48.51, -123.36), 10 ,""h"" ,false)"
+  ' strHTML = strHTML & vbCrLf & "  alert (""12"");"
+   strHTML = strHTML & vbCrLf & "        map.GetRoute(""microsoft"", ""area 51"",null,null,onGotRoute)"
+  '  strHTML = strHTML & vbCrLf & "  alert (""13"");"
+ strHTML = strHTML & vbCrLf & " }"
+ strHTML = strHTML & vbCrLf & " function onGotRoute(route)"
+ strHTML = strHTML & vbCrLf & " {"
+  strHTML = strHTML & vbCrLf & "   var routeinfo=""Route info:\n\n"";"
+   strHTML = strHTML & vbCrLf & "  routeinfo += ""Total distance: "";"
+    strHTML = strHTML & vbCrLf & " routeinfo += route.Itinerary.Distance+"" "";"
+  strHTML = strHTML & vbCrLf & "   routeinfo += route.Itinerary.DistanceUnit+""\n"";"
+
+ strHTML = strHTML & vbCrLf & "    var steps="""";"
+  strHTML = strHTML & vbCrLf & "   var len = route.Itinerary.Segments.length;"
+  strHTML = strHTML & vbCrLf & "   for(var i = 0; i<len ;i++)"
+   strHTML = strHTML & vbCrLf & "  {"
+  strHTML = strHTML & vbCrLf & "      steps+=route.Itinerary.Segments[i].Instruction+"" -- ("";"
+   strHTML = strHTML & vbCrLf & "     steps+=route.Itinerary.Segments[i].Distance+"") "";"
+    strHTML = strHTML & vbCrLf & "    steps+=route.Itinerary.DistanceUnit+""\n"";"
+  strHTML = strHTML & vbCrLf & "   }"
+  strHTML = strHTML & vbCrLf & "   routeinfo += ""Steps:\n""+steps;"
+  strHTML = strHTML & vbCrLf & "   alert(routeinfo);"
+ strHTML = strHTML & vbCrLf & " }"
+
+
+ strHTML = strHTML & vbCrLf & "</script>"
+' strhtml = strhtml & vbCrLf & "// -->"
+'Last, you display the map:
+
+ strHTML = strHTML & vbCrLf & "<body onload='GetMap();'>"
+ strHTML = strHTML & vbCrLf & "<div id='myMap' style='position:relative; width:600px; height:600px;'></div>"
+ strHTML = strHTML & vbCrLf & "<td> right or left click map for latitude longitude position </td>"
+ strHTML = strHTML & vbCrLf & "</body>"
+ strHTML = strHTML & vbCrLf & "</html>"
+'WriteFile CurrentDBDir & "test.html", strHTML
+createhtmlroute = strHTML
+End Function
+
+

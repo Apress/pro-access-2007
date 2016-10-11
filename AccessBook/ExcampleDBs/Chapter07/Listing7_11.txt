@@ -1,0 +1,4 @@
+CREATE PROCEDURE dbo.usp_deletemodule
+(@StudRef int)
+AS DELETE FROM dbo.tblStudent
+WHERE (StudRef = @StudRef)

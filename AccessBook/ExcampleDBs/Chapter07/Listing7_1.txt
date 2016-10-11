@@ -1,0 +1,18 @@
+USE [Chapter7]
+GO
+/****** Object: Table [dbo].[tblLogg] Script Date: 06/04/2006 15:39:19 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[tblLogg](
+[logID] [int] IDENTITY(1,1) NOT NULL,
+[LogTable] [nvarchar](50) COLLATE Latin1_General_CS_AI NULL,
+[LogDate] [datetime] NULL,
+[logUser] [nvarchar](50) COLLATE Latin1_General_CS_AI NULL,
+CONSTRAINT [PK_tblLogg] PRIMARY KEY CLUSTERED
+(
+[logID] ASC
+)WITH (PAD_INDEX = OFF, IGNORE_DUP_KEY = OFF) ON [PRIMARY]
+) ON [PRIMARY]
+Execute the statement
